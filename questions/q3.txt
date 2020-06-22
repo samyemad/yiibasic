@@ -1,0 +1,60 @@
+CREATE TABLE orders (
+    id              INT(11) NOT NULL AUTO_INCREMENT,        #PRIMARY KEY
+    order_number    INT(11),
+    customer_id     INT(11),
+    product_id      INT(11),
+    created_at      INT(11), 
+);
+
+CREATE TABLE order_status (
+    id              INT(11) NOT NULL AUTO_INCREMENT,  #PRIMARY KEY
+    order_id        INT(11),
+    status          VARCHAR(10),                            #NEW, PENDING, APPROVED, SHIPPED, DELIVERED, CENCELLED, DECLINED
+    created_at      INT(11), 
+);
+
+orders
++-----------------------------------------------------------+
+| id | order_number | customer_id | product_id | created_at |
++-----------------------------------------------------------+
+| 1  | 1234         | 1           | 1          | 12313565   |
++-----------------------------------------------------------+
+
+order_status
++-----------------------------------------+
+| id | order_id |   status   | created_at |
++-----------------------------------------+
+| 1  | 1        | NEW        | 1          |
++-----------------------------------------+
+| 2  | 1        | PENDING    | 2          |
++-----------------------------------------+
+| 3  | 1        | APPROVED   | 3          |
++-----------------------------------------+
+| 4  | 1        | CANCELLED  | 4          |
++-----------------------------------------+
+
+
+Q1: get all orders that are approved then cancelled in a specific range
++------------------------------------------------------------------------+
+| id | order_number | customer_id | product_id | created_at |   status   |
++------------------------------------------------------------------------+
+| 1  | 1234         | 1           | 1          | 12313565   | CANCELLED  |
++------------------------------------------------------------------------+
+| 3  | 1236         | 1           | 1          | 12313565   | CANCELLED  |
++------------------------------------------------------------------------+
+
+Solution:
+
+SELECT
+    o.*,
+    s2.status
+FROM
+    `orders` o
+INNER JOIN
+    `order_status` s1
+ON
+    o.id = s1.order_id AND s1.status = 'APPROVED'
+INNER JOIN
+    `order_status` s2
+ON
+    s1.order_id = s2.order_id AND s2.status = 'CENCELLED' AND s2.created_at > s1.created_at;
