@@ -54,6 +54,7 @@ INNER JOIN
     `order_status` s1
 ON
     o.id = s1.order_id AND s1.status = 'APPROVED'
+
 INNER JOIN
     `order_status` s2
 ON
